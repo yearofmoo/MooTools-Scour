@@ -1,0 +1,55 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+<head>
+</head> 
+
+<body id="" class=""> 
+  <div data-role="Hello" data-hello-options="{ name : 'Name 1' }">
+    Hello
+  </div>
+  <div data-role="Hello" data-hello-options="{ name : 'Name 2' }">
+    Hello2
+  </div>
+  <div data-role="Jello" data-hello-options="{ name : 'fatias' }">
+    Jello
+  </div>
+  <a href="#" id="reload">Reload</a>
+  <a href="/" id="reload">Other Website</a>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/mootools/1.4.4/mootools-yui-compressed.js"></script>
+<script type="text/javascript" src="../../Source/MooTools-Scour.js"></script>
+<script type="text/javascript">
+window.addEvent('domready',function() {
+
+  $('reload').addEvent('click',function(event) {
+    event.stop();
+    Scour.Global.reload();
+  });
+   
+  Scour.Global.defineRole('Hello',{
+
+    onLoad : function(element) {
+      this.counter = 0;
+      $(element).addEvent('click',function(event) {
+        alert(this.innerHTML);
+      });
+    },
+
+    onIterate : function(element,options) {
+      var name = options.get('name');
+      element.innerHTML = name + ' ' + (++this.counter);
+      if(this.counter == 5) {
+        options.set('name','tester ' + name);
+      } 
+    },
+
+    onUnLoad : function(element,options) {
+      element.destroy();
+    }
+
+  });
+
+  new Scour().run();
+});
+</script>
+</body>
+</html> 
