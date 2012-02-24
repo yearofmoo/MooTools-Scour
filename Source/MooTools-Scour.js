@@ -114,7 +114,18 @@ Scour = new Class({
   },
 
   run : function(container) {
-    this.findElements(container,this.options.selector,this.options.roleAttribute).each(function(array) {
+    var elements, role;
+    if(typeOf(container) == 'string') {
+      role = container;
+      container = $(document.body);
+    }
+    elements = this.findElements(container,this.options.selector,this.options.roleAttribute);
+    if(role) {
+      elements = elements.filter(function(elm) {
+        return elm[1] == role;
+      });
+    }
+    elements.each(function(array) {
       var element = array[0];
       var events = array[2];
       var role = array[1];

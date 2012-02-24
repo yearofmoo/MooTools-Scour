@@ -44,6 +44,6 @@ You can also score the area of the Scour.run() selection:
 
 Scour.run(innerContainer);
 
-Or by role
+Or by role:
 
 Scour.run('Close');
