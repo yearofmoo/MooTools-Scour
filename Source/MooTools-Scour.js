@@ -222,7 +222,13 @@ Scour.OptionsAPI = new Class({
 
   getObject : function() {
     if(!this.object) {
-      this.object = JSON.decode(this.getData());
+      var data = this.getData();
+      if(data) {
+        this.object = JSON.decode(this.getData());
+      }
+      else {
+        this.object = {};
+      }
     }
     return this.object;
   },
