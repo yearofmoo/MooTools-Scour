@@ -43,6 +43,14 @@ window.addEvent('domready',function() {
    
   Scour.Global.defineRole('Hello',{
 
+    includeIf : function() {
+      return true;
+    },
+
+    applyIf : function() {
+      return true;
+    },
+
     onLoad : function(element) {
       this.counter = 0;
       $(element).addEvent('click',function(event) {

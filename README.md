@@ -41,7 +41,7 @@ Scour.Global.defineRole('Close',function(element,options) {
   var sayHello = options.getAsBoolean('sayHelloBeforeClose');
   element.addEvent('click',function(event) {
     if(sayHello) {
-      alert('hello! I'm about to be closed');
+      alert("hello! I'm about to be closed");
     }
     event.stop();
     this.hide();
@@ -75,7 +75,7 @@ Scour.Global.defineRole('ReloadCount',{
 });
 ```
 
-You can also call the apply operation in a few ways
+You can also call the apply operation in a few ways:
 
 ```javascript
 //Focus on a specific container (element) and run the operation on that and its children
@@ -86,4 +86,44 @@ Scour.apply('Close');
 
 //Or On One Element Exclusively
 Socur.applyOnElement(element);
+```
+
+## Custom Scour Objects
+
+Custom Scour Objects can be defined:
+
+```javascript
+advancedBrowsers = new Scour;
+
+advancedBrowsers.definedRole('Animate',function(element,options) {
+  //perform a fancy animation that will only faster browsers can perform
+});
+
+//then later on when you call the operation
+if(isFancyBrowser) {
+  advancedBrowsers.apply();
+}
+
+//Or you can just set a condition to a global Scour role
+Scour.Global.defineRole('Animate',{
+
+  includeIf : function() { //the role will get included only if this returns true (if the method exists)
+    if(isFancyBrowser) {
+      return true;
+    }
+  },
+
+  applyIf : function(element,options) { //this is a quick method to allow or prevent the onLoad or onIterate method from running every time
+    return true;
+  },
+
+  onLoad : function(element,options) {
+    //normal operation
+  },
+
+  onIterate : function(element,options) {
+    //normal operation
+  }
+
+});
 ```

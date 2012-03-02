@@ -50,6 +50,9 @@ Scour = new Class({
     }
     else if(typeOf(fn) == 'object') {
       events = fn;
+      if(typeOf(events.includeIf) == 'function' && !events.includeIf()) {
+        return; //ignore the scour event from being added
+      }
     }
     else {
       throw new Error('Invalid callback parameter given');
@@ -101,7 +104,11 @@ Scour = new Class({
             events = Object.clone(this.getRole(role));
             elm.store(key,events);
           }
-          elements.push([elm,role,events]);
+
+          var pass = !events.applyIf || (typeOf(events.applyIf) == 'function' && events.applyIf() == true);
+          if(pass) {
+            elements.push([elm,role,events]);
+          }
         }
       },this);
     },this);
