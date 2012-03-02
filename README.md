@@ -51,7 +51,7 @@ You can also call the apply operation in a few ways
 //Focus on a specific container (element) and run the operation on that and its children
 Scour.apply(innerContainer);
 
-//Or by role:
+//Or by role
 Scour.apply('Close');
 
 //Or On One Element Exclusively
