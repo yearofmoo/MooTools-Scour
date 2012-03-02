@@ -75,13 +75,19 @@ Scour = new Class({
     return !! this.getRoles()[role];
   },
 
+  elementHasRole : function(elm,role) {
+    return element.get(this.options.roleAttribute).contains(role);
+  },
+
   createStorageKey : function(key,role) {
     return key + ':' + role;
   },
 
   findElements : function(element,selector,roleAttribute) {
     var elements = [];
-    $(element || this.options.container).getElements(selector).filter(function(elm) {
+    var results = $(element || this.options.container).getElements(selector);
+    results.push(element);
+    results.each(function(elm) {
       var roles = elm.retrieve(this.options.rolesKey);
       if(!roles) {
         roles = elm.get(roleAttribute).toString().trim().split(' ');
@@ -113,7 +119,7 @@ Scour = new Class({
     fn.apply(eventOptions,[element,api]);
   },
 
-  run : function(container) {
+  apply : function(container) {
     var elements, role;
     if(typeOf(container) == 'string') {
       role = container;
@@ -144,6 +150,13 @@ Scour = new Class({
         element.removeAttribute(this.options.roleAttribute);
       }
     },this);
+  },
+
+  applyOnElement : function(element) {
+    var attr = element.get(this.options.roleAttribute);
+    if(attr.length > 0) {
+      attr.split(' ').each(this.fireRoleEvent,this);
+    }
   },
 
   onFirstRun : function(element,role,events) {
@@ -180,7 +193,7 @@ Scour = new Class({
 
   reload : function(container) {
     this.cleanup(container);
-    this.run(container);
+    this.apply(container);
   },
 
   unLoad : function() {
@@ -237,12 +250,36 @@ Scour.OptionsAPI = new Class({
     return !! this.getObject()[key];
   },
 
-  get : function(key) {
-    return this.getObject()[key];
+  get : function(key,defaultValue) {
+    var value = this.getObject()[key];
+    if(value === null || value == undefined) {
+      value = defaultValue;
+    }
+    return value;
   },
 
   set : function(key,value) {
     return this.getObject()[key]=value;
+  },
+
+  getAsBoolean : function(key,defaultValue) {
+    return !! this.get(key,defaultValue);
+  },
+
+  isNull : function(key) {
+    return this.get(key) == null;
+  }
+
+});
+
+Element.implement({
+
+  scour : function() {
+    Scour.Global.runElement(this);
+  },
+
+  hasRole : function(role) {
+    return Scour.Global.elementHasRole(this,role);
   }
 
 });

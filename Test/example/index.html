@@ -26,7 +26,7 @@ window.addEvent('domready',function() {
   $('reload').addEvent('click',function(event) {
     event.stop();
     Scour.Global.reload();
-    Scour.Global.run('Gello');
+    //Scour.Global.apply('Gello');
   });
    
   Scour.Global.defineRole('Gello',{
@@ -64,7 +64,7 @@ window.addEvent('domready',function() {
 
   });
 
-  new Scour().run();
+  new Scour().apply();
 });
 </script>
 </body>
