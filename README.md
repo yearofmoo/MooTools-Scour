@@ -25,8 +25,30 @@ Scour.Global.defineRole('Close',function(element,options) {
 //sets up the events
 Scour.apply();
 ```
-
 Now any element that contains the value "Close" within the attribute data-role will be scoured.
+
+
+You can also embed option values directly into the HTML (as a JSON hash) and those can be used by the Scour event:
+
+```html
+<div data-role="Close" data-close-options="{ sayHelloBeforeClose : true }">This element will close when clicked</div>
+```
+
+And use those options within the JavaScript:
+
+```javascript
+Scour.Global.defineRole('Close',function(element,options) {
+  var sayHello = options.getAsBoolean('sayHelloBeforeClose');
+  element.addEvent('click',function(event) {
+    if(sayHello) {
+      alert('hello! I'm about to be closed');
+    }
+    event.stop();
+    this.hide();
+  });
+});
+```
+
 
 ## Detailed Usage
 You can also include a much more involved scour role:
