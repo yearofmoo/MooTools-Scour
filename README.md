@@ -6,7 +6,13 @@ The problem with most plugins is that they require their own className or select
 Thankfully MooTools-Scour takes care of all of this. Here's how it works:
 
 ## Simple Usage
+
+We'll start by adding a common javascript event where an element has to be closed when clicked:
+
+```html
 <div data-role="Close">This element will close when clicked</div>
+```
+And now the javascript to find that element and add the event:
 
 ```javascript
 Scour.Global.defineRole('Close',function(element,options) {
@@ -15,10 +21,12 @@ Scour.Global.defineRole('Close',function(element,options) {
     this.hide();
   });
 });
-```
 
 //sets up the events
 Scour.apply();
+```
+
+Now any element that contains the value "Close" within the attribute data-role will be scoured.
 
 ## Detailed Usage
 You can also include a much more involved scour role:
