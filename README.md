@@ -113,7 +113,7 @@ Scour.Global.defineRole('Animate',{
     }
   },
 
-  applyIf : function(element,options) { //this is a quick method to allow or prevent the onLoad or onIterate method from running every time
+  applyIf : function(element) { //this is a quick method to allow or prevent the onLoad or onIterate method from running every time
     return true;
   },
 
