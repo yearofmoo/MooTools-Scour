@@ -7,6 +7,7 @@ Scour = new Class({
   Implements : [Options, Events],
 
   options : {
+    destroyElementsOnCleanup : true,
     selector : '[data-role]',
     cleanupSelector : '[data-role-cleanup]',
     roleAttribute : 'data-role',
@@ -50,7 +51,7 @@ Scour = new Class({
     }
     else if(typeOf(fn) == 'object') {
       events = fn;
-      if(typeOf(events.includeIf) == 'function' && !events.includeIf(element)) {
+      if(typeOf(events.includeIf) == 'function' && !events.includeIf()) {
         return; //ignore the scour event from being added
       }
     }
@@ -89,11 +90,13 @@ Scour = new Class({
   findElements : function(element,selector,roleAttribute) {
     var elements = [];
     var results = $(element || this.options.container).getElements(selector);
-    results.push(element);
+    if(element.get(roleAttribute)) {
+      results.push(element);
+    }
     results.each(function(elm) {
       var roles = elm.retrieve(this.options.rolesKey);
       if(!roles) {
-        roles = elm.get(roleAttribute).toString().trim().split(' ');
+        roles = (elm.get(roleAttribute) || "").trim().split(' ');
         elm.store(this.options.rolesKey,roles);
       }
       roles.each(function(role) {
@@ -195,6 +198,10 @@ Scour = new Class({
       var events = array[2];
       var fn = events.onCleanup;
       this.fireRoleEvent(element,role,fn,events);
+      if(this.options.destroyElementsOnCleanup) {
+        alert('a');
+        element.destroy();
+      }
     },this);
   },
 
