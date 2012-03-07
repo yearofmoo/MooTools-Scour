@@ -98,8 +98,9 @@ Scour = new Class({
   },
 
   findElements : function(element,selector,roleAttribute) {
+    element = $(element || this.getContainer());
     var elements = [];
-    var results = $(element || this.getContainer()).getElements(selector);
+    var results = element.getElements(selector);
     if(element.get(roleAttribute)) {
       results.push(element);
     }
