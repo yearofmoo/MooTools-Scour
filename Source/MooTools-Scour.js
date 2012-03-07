@@ -24,7 +24,6 @@ Scour = new Class({
 
   initialize : function(options) {
     this.setOptions(options);
-    this.options.container = this.options.container || document.body;
     this.roles = {};
     this.counter = 0;
     if(this.options.useBeforeUnloadEvent) {
@@ -33,6 +32,17 @@ Scour = new Class({
     if(this.options.mergeGlobalRoles) {
       this.mergeGlobalRoles();
     }
+  },
+
+  setContainer : function(element) {
+    this.options.container = $(element);
+  },
+
+  getContainer : function() {
+    if(!this.options.container) {
+      this.options.container = document.body;
+    }
+    return this.options.container;
   },
 
   mergeGlobalRoles : function() {
@@ -89,7 +99,7 @@ Scour = new Class({
 
   findElements : function(element,selector,roleAttribute) {
     var elements = [];
-    var results = $(element || this.options.container).getElements(selector);
+    var results = $(element || this.getContainer()).getElements(selector);
     if(element.get(roleAttribute)) {
       results.push(element);
     }
