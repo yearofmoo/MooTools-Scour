@@ -7,7 +7,7 @@ Scour = new Class({
   Implements : [Options, Events],
 
   options : {
-    destroyElementsOnCleanup : true,
+    destroyElementsOnCleanup : false,
     selector : '[data-role]',
     cleanupSelector : '[data-role-cleanup]',
     roleAttribute : 'data-role',
@@ -208,9 +208,10 @@ Scour = new Class({
       var role = array[1];
       var events = array[2];
       var fn = events.onCleanup;
-      this.fireRoleEvent(element,role,fn,events);
+      if(fn) {
+        this.fireRoleEvent(element,role,fn,events);
+      }
       if(this.options.destroyElementsOnCleanup) {
-        alert('a');
         element.destroy();
       }
     },this);
@@ -227,7 +228,9 @@ Scour = new Class({
       var role = array[1];
       var events = array[2];
       var fn = events.onUnLoad;
-      this.fireRoleEvent(element,role,fn,events);
+      if(fn) {
+        this.fireRoleEvent(element,role,fn,events);
+      }
     },this);
   },
 
