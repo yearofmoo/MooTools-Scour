@@ -119,7 +119,7 @@ Scour = new Class({
             elm.store(key,events);
           }
 
-          var pass = !events.applyIf || (typeOf(events.applyIf) == 'function' && events.applyIf(element) == true);
+          var pass = !events.applyIf || (typeOf(events.applyIf) == 'function' && events.applyIf(elm) == true);
           if(pass) {
             elements.push([elm,role,events]);
           }
