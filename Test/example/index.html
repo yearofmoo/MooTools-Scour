@@ -7,7 +7,7 @@
   <div data-role="Hello" data-hello-options="{ name : 'Name 1' }">
     Hello
   </div>
-  <div data-role="Hello" data-hello-options="{ name : 'Name 2' }">
+  <div data-role="Gello Hello" data-hello-options="{ name : 'Name 2' }">
     Hello2
   </div>
   <div data-role="Jello" data-hello-options="{ name : 'fatias' }">
@@ -30,7 +30,7 @@ window.addEvent('domready',function() {
   });
    
   Scour.Global.defineRole('Gello',{
-    onIterate : function(element,options) {
+    onLoad : function(element,options) {
       var html = element.innerHTML;
       if(html == 'gello') {
         element.innerHTML = 'barcello';

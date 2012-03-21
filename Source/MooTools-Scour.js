@@ -130,7 +130,7 @@ Scour = new Class({
   },
 
   fireRoleEvent : function(element,role,fn,eventOptions) {
-    var attr = 'data-'+role.toLowerCase()+'-options';
+    var attr = this.getRoleOptionsAttr(role);
     var key = this.createStorageKey(this.options.apiKey,role);
     var api = element.retrieve(key);
     if(!api) {
@@ -138,6 +138,10 @@ Scour = new Class({
       element.store(key,api);
     }
     fn.apply(eventOptions,[element,api]);
+  },
+
+  getRoleOptionsAttr : function(role) {
+    return 'data-'+role.toLowerCase()+'-options';
   },
 
   apply : function(container) {
@@ -168,9 +172,22 @@ Scour = new Class({
         this.fireRoleEvent(element,role,fn,events);
       }
       else {
-        element.removeAttribute(this.options.roleAttribute);
+        this.onNoIterationMethodFound(element,role);
       }
     },this);
+  },
+
+  onNoIterationMethodFound : function(element,role) {
+    var attr = this.options.roleAttribute;
+    var value = element.getAttribute(attr);
+    var r = new RegExp('\s*'+role+'\s*');
+    value = value.replace(r,' ').trim();
+    if(value.length > 0) {
+      element.setAttribute(attr,value);
+    }
+    else {
+      element.removeAttribute(attr);
+    }
   },
 
   applyOnElement : function(element) {
