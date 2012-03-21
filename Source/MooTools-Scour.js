@@ -201,54 +201,66 @@ Scour = new Class({
     if(events.onLoad) {
       this.fireRoleEvent(element,role,events.onLoad,events);
     }
-    if(events.onUnLoad) {
-      var key = this.options.unLoadAttribute;
-      var value = element.getAttribute(key) || '';
-      if(value == '' || role.indexOf(value)==-1) {
-        value += (value.length.length > 0 ? ' ' : '') + role;
-        element.setAttribute(key,value);
-      }
-    }
-    if(events.onCleanup) {
-      var key = this.options.cleanupAttribute;
-      var value = element.getAttribute(key) || '';
-      if(value == '' || role.indexOf(value)==-1) {
-        value += (value.length.length > 0 ? ' ' : '') + role;
-        element.setAttribute(key,value);
+
+    var filterMethods = ['onLoad','onIterate'];
+    var methods = {};
+    for(var i in events) {
+      if(filterMethods.indexOf(i) == -1) {
+        var fn = events[i];
+        if(typeOf(fn) == 'function' && i.substr(0,2)=='on') {
+          this.attachCustomEvent(element,role,i,fn);
+        }
       }
     }
   },
 
-  cleanup : function(container) {
-    this.findElements(container,this.options.cleanupSelector,this.options.cleanupAttribute).each(function(array) {
+  attachCustomEvent : function(element,role,name,fn) {
+    var key = name.charAt(2).toLowerCase() + name.substr(3);
+    var attr = 'data-'+key.toLowerCase();
+    var value = element.getAttribute(attr) || '';
+    if(value == '' || role.indexOf(value)==-1) {
+      value += (value.length.length > 0 ? ' ' : '') + role;
+      element.setAttribute(attr,value);
+    }
+  },
+
+  fireCustomMethod : function(name,container) {
+    if(!container) {
+      container = document.id(document.body);
+    }
+    var attr = 'data-'+name.toLowerCase();
+    var selector = '['+attr+']';
+    var event = 'on' + name.charAt(0).toUpperCase() + name.substr(1);
+    this.findElements(container,selector,attr).each(function(array) {
       var element = array[0];
       var role = array[1];
       var events = array[2];
-      var fn = events.onCleanup;
+      var fn = events[event];
       if(fn) {
         this.fireRoleEvent(element,role,fn,events);
       }
-      if(this.options.destroyElementsOnCleanup) {
-        element.destroy();
-      }
     },this);
+  },
+
+  cleanup : function(container) {
+    this.fireCustomMethod('cleanup',container);
+  },
+
+  pause : function(container) {
+    this.fireCustomMethod('pause',container);
+  },
+
+  resume : function(container) {
+    this.fireCustomMethod('resume',container);
+  },
+
+  unLoad : function() {
+    this.fireCustomMethod('unLoad',container);
   },
 
   reload : function(container) {
     this.cleanup(container);
     this.apply(container);
-  },
-
-  unLoad : function() {
-    this.findElements(document.body,this.options.unLoadSelector,this.options.unLoadAttribute).each(function(array) {
-      var element = array[0];
-      var role = array[1];
-      var events = array[2];
-      var fn = events.onUnLoad;
-      if(fn) {
-        this.fireRoleEvent(element,role,fn,events);
-      }
-    },this);
   },
 
   flushEvents : function() {

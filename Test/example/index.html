@@ -26,7 +26,6 @@ window.addEvent('domready',function() {
   $('reload').addEvent('click',function(event) {
     event.stop();
     Scour.Global.reload();
-    //Scour.Global.apply('Gello');
   });
    
   Scour.Global.defineRole('Gello',{
@@ -38,9 +37,13 @@ window.addEvent('domready',function() {
       else {
         element.innerHTML = 'gello';
       }
+    },
+
+    onCleanup : function() {
+      alert('clean GEllo');
     }
   });
-   
+
   Scour.Global.defineRole('Hello',{
 
     includeIf : function() {
@@ -64,10 +67,6 @@ window.addEvent('domready',function() {
       if(this.counter == 5) {
         options.set('name','tester ' + name);
       } 
-    },
-
-    onUnLoad : function(element,options) {
-      element.destroy();
     }
 
   });
