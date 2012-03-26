@@ -254,17 +254,13 @@ Scour = new Class({
     this.fireCustomMethod('resume',container);
   },
 
-  unLoad : function() {
+  unLoad : function(container) {
     this.fireCustomMethod('unLoad',container);
   },
 
   reload : function(container) {
     this.cleanup(container);
     this.apply(container);
-  },
-
-  flushEvents : function() {
-    this.events = {};
   }
 
 });
