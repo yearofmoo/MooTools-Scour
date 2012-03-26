@@ -5,6 +5,8 @@ The problem with most plugins is that they require their own className or select
 
 Thankfully MooTools-Scour takes care of all of this. Here's how it works:
 
+* Full documentation and a demo can be found at http://www.yearofmoo.com/Scour
+
 ## Simple Usage
 
 We'll start by adding a common javascript event where an element has to be closed when clicked:
@@ -126,4 +128,9 @@ Scour.Global.defineRole('Animate',{
   }
 
 });
+
 ```
+
+## More Info...
+
+* Please visit http://www.yearofmoo.com/Scour for a full documentation and a demo of the Scour plugin.
