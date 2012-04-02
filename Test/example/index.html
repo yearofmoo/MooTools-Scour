@@ -19,6 +19,9 @@
   <a href="#" id="reload">Reload</a>
   <a href="/" id="reload">Other Website</a>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/mootools/1.4.4/mootools-yui-compressed.js"></script>
+<script type="text/javascript" src="../Assets/MooTools-more.js"></script>
+<script type="text/javascript" src="../../Source/MooTools-Asset.css-patch/Source/Asset.css.js"></script>
+<script type="text/javascript" src="../../Source/MooTools-Asset.Extras/Source/Asset.Extras.js"></script>
 <script type="text/javascript" src="../../Source/MooTools-Scour.js"></script>
 <script type="text/javascript">
 window.addEvent('domready',function() {
@@ -29,14 +32,20 @@ window.addEvent('domready',function() {
   });
    
   Scour.Global.defineRole('Gello',{
+
+    Assets : ['./red.css'],
+
     onLoad : function(element,options) {
-      var html = element.innerHTML;
-      if(html == 'gello') {
-        element.innerHTML = 'barcello';
-      }
-      else {
-        element.innerHTML = 'gello';
-      }
+      this.loadAssets(function() {
+        var html = element.innerHTML;
+        if(html == 'gello') {
+          element.innerHTML = 'barcello';
+        }
+        else {
+          element.innerHTML = 'gello';
+        }
+
+      });
     },
 
     onCleanup : function() {

@@ -34,6 +34,10 @@ Scour = new Class({
     }
   },
 
+  supportsAssets : function() {
+    return Asset && typeOf(Asset.load) == 'function';
+  },
+
   setContainer : function(element) {
     this.options.container = $(element);
   },
@@ -64,11 +68,39 @@ Scour = new Class({
       if(typeOf(events.includeIf) == 'function' && !events.includeIf()) {
         return; //ignore the scour event from being added
       }
+
+      events.loadAssets = function(fn) { fn.call(); };
+
+      if(typeOf(events.Assets) && this.supportsAssets()) {
+        events = this.prepareAssetHelpersForRole(events);
+      }
     }
     else {
       throw new Error('Invalid callback parameter given');
     }
     this.roles[role] = events;
+  },
+
+  prepareAssetHelpersForRole : function(events) {
+    events.loadAssets = function(fn) {
+      if(this._assetsLoaded) {
+        fn.call();
+        return;
+      }
+      var assets = this.Assets;
+      if(typeOf(assets) == 'string') {
+        assets = assets.split(',');
+      }
+      else if(typeOf(assets) != 'array') {
+        assets = [assets];
+      }
+      Asset.load(assets,fn);
+      this._assetsLoaded = true;
+    }.bind(events);
+    events.flushAssets = function() {
+      this._assetsLoaded = false;
+    }
+    return events;
   },
 
   removeRole : function(role) {
