@@ -7,6 +7,7 @@ Scour = new Class({
   Implements : [Options, Events],
 
   options : {
+    assets : true,
     destroyElementsOnCleanup : false,
     selector : '[data-role]',
     cleanupSelector : '[data-role-cleanup]',
@@ -35,7 +36,7 @@ Scour = new Class({
   },
 
   supportsAssets : function() {
-    return Asset && typeOf(Asset.load) == 'function';
+    return this.options.assets && Asset && typeOf(Asset.load) == 'function';
   },
 
   setContainer : function(element) {
