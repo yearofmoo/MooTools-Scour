@@ -352,6 +352,14 @@ Scour.OptionsAPI = new Class({
     return !! this.get(key,defaultValue);
   },
 
+  getAsArray : function(key) {
+    var data = this.get(key);
+    if(typeOf(data) != 'array') {
+      data = [data];
+    }
+    return data;
+  },
+
   isNull : function(key) {
     return this.get(key) == null;
   }
