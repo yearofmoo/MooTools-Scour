@@ -369,7 +369,7 @@ Scour.OptionsAPI = new Class({
 Element.implement({
 
   scour : function() {
-    Scour.Global.runElement(this);
+    Scour.Global.applyOnElement(this);
   },
 
   hasRole : function(role) {
