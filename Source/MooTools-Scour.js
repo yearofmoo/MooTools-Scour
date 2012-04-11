@@ -319,6 +319,10 @@ Scour.OptionsAPI = new Class({
     return this.getElement().get(this.getAttr());
   },
 
+  getJSON : function() {
+    return this.getData();
+  },
+
   getObject : function() {
     if(!this.object) {
       var data = this.getData();
@@ -330,6 +334,10 @@ Scour.OptionsAPI = new Class({
       }
     }
     return this.object;
+  },
+
+  getOptions : function() {
+    return this.getObject();
   },
 
   hasKey : function(key) {
@@ -348,6 +356,13 @@ Scour.OptionsAPI = new Class({
     return this.getObject()[key]=value;
   },
 
+  getAsElement : function(key) {
+    var elm = this.get(key);
+    if(elm) {
+      return document.id(elm);
+    }
+  },
+
   getAsBoolean : function(key,defaultValue) {
     return !! this.get(key,defaultValue);
   },
@@ -358,6 +373,15 @@ Scour.OptionsAPI = new Class({
       data = [data];
     }
     return data;
+  },
+
+  del : function(key) {
+    var value, object = this.getObject();
+    if(typeOf(object[key]) != 'undefined') {
+      value = object[key];
+      delete object[key];
+    }
+    return value;
   },
 
   isNull : function(key) {
