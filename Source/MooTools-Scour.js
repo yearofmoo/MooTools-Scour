@@ -66,7 +66,7 @@ Scour = new Class({
     }
     else if(typeOf(fn) == 'object') {
       events = fn;
-      if(typeOf(events.includeIf) == 'function' && !events.includeIf()) {
+      if((typeOf(events.includeIf) == 'function' && !events.includeIf()) || events.includeIf === false) {
         return; //ignore the scour event from being added
       }
 
