@@ -1,0 +1,16 @@
+javascripts:
+  input:
+  - Source/src/Scour.License.js
+  - Source/src/Scour.Base.js
+  - Source/src/Scour.OptionsAPI.js
+  - Source/src/Scour.Element.js
+  output:
+  - Source/Scour.js
+
+jsmin:
+  filters:
+  - cat Source/Scour.js | jsmin > %{output}
+  input:
+  - Source/Scour.js
+  output:
+  - Source/Scour.min.js
