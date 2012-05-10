@@ -1,79 +1,118 @@
 <!DOCTYPE html> 
 <html lang="en"> 
 <head>
+<style type="text/css">
+.actions {
+  background:black;
+  position:fixed;
+  top:0;
+  right:0;
+  left:0;
+  padding:5px;
+}
+.actions, .actions a {
+  color:white;
+  display:inline-block;
+  padding:5px 10px;
+}
+body {
+  padding:20px;
+}
+#outer,#inner {
+  padding:20px;
+  border:1px solid #ddd;
+}
+#outer {
+  background:#ccc;
+}
+#inner {
+  background:maroon;
+}
+h2 {
+  background:white;
+  color:black;
+  -webkit-transition:1s linear all;
+}
+.flash {
+  background:orange;
+  color:red;
+}
+</style>
 </head> 
 
 <body id="" class=""> 
-  <div data-role="Hello" data-hello-options="{ name : 'Name 1' }">
-    Hello
+
+  <nav class="actions">
+    <a href="#" id="load-body">Load Body</a>
+    <a href="#" id="load-outer">Load Outer</a>
+    <a href="#" id="load-inner">Load Inner</a>
+  </nav>
+
+  <h1>Entire Page</h1>
+
+  <div class="object">
+    <h2 data-role="Flash">Load Only Once</h2>
+    <h3 data-role="Counter">Total Times Loaded <em>1</em></h3>
   </div>
-  <div data-role="Gello Hello" data-hello-options="{ name : 'Name 2' }">
-    Hello2
+
+  <div id="outer">
+    <h2>Outer Element</h2>
+
+    <div class="object">
+      <h2 data-role="Flash">Load Only Once</h2>
+      <h3 data-role="Counter">Total Times Loaded <em>1</em></h3>
+    </div>
+
+    <div id="inner">
+      <h2>Inner Element</h2>
+
+      <div class="object">
+        <h2 data-role="Flash">Load Only Once</h2>
+        <h3 data-role="Counter" data-counter-options="{ selector : 'strong' }">Total Times Loaded <strong>1</strong></h3>
+      </div>
+    </div>
   </div>
-  <div data-role="Jello" data-hello-options="{ name : 'fatias' }">
-    Jello
-  </div>
-  <div data-role="Gello" data-hello-options="{ name : 'fatias' }">
-    Jello
-  </div>
-  <a href="#" id="reload">Reload</a>
-  <a href="/" id="reload">Other Website</a>
+
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/mootools/1.4.4/mootools-yui-compressed.js"></script>
 <script type="text/javascript" src="../Assets/MooTools-more.js"></script>
 <script type="text/javascript" src="../../Source/MooTools-Scour.js"></script>
 <script type="text/javascript">
 window.addEvent('domready',function() {
 
-  $('reload').addEvent('click',function(event) {
+  $('load-body').addEvent('click',function(event) {
     event.stop();
-    Scour.Global.reload();
-  });
-   
-  Scour.Global.defineRole('Gello',{
-
-    onLoad : function(element,options) {
-      var html = element.innerHTML;
-      if(html == 'gello') {
-        element.innerHTML = 'barcello';
-      }
-      else {
-        element.innerHTML = 'gello';
-      }
-    },
-
-    onCleanup : function() {
-      alert('clean GEllo');
-    }
+    Scour.Global.apply(document.body);
   });
 
-  Scour.Global.defineRole('Hello',{
+  $('load-outer').addEvent('click',function(event) {
+    event.stop();
+    Scour.Global.apply($('outer'));
+  });
 
-    includeIf : function() {
-      return true;
-    },
+  $('load-inner').addEvent('click',function(event) {
+    event.stop();
+    Scour.Global.apply($('inner'));
+  });
 
-    applyIf : function(element) {
-      return true;
-    },
+  Scour.Global.defineRole('Flash',function(element) {
+    element.addClass('flash');
+  });
 
-    onLoad : function(element) {
-      this.counter = 0;
-      $(element).addEvent('click',function(event) {
-        alert(this.innerHTML);
-      });
-    },
+  Scour.Global.defineRole('Counter',{
 
     onIterate : function(element,options) {
-      var name = options.get('name');
-      element.innerHTML = name + ' ' + (++this.counter);
-      if(this.counter == 5) {
-        options.set('name','tester ' + name);
-      } 
+      var selector = options.get('selector') || 'em';
+      var inner = element.getElement(selector);
+      var value = inner.get('html').toInt() + 1;
+      inner.set('html',value);
+      var percentage = (value*5) / 100;
+      var color = (255 * percentage).toInt();
+      var rgb = 'rgb('+color+','+color+','+color+')';
+      element.setStyle('background-color',rgb);
     }
 
   });
 
-  new Scour().apply();
 });
 </script>
 </body>
