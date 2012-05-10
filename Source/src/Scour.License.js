@@ -15,6 +15,7 @@ requires:
 
 provides: 
 - Scour
+- Scour.Global
 - Scour.OptionsAPI
 
 */
