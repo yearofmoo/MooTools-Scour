@@ -152,6 +152,7 @@ Scour.Global.defineRole('SomeRole',{
    }
 
 });
+```
 
 ## More Info...
 
