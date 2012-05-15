@@ -9,8 +9,10 @@ Scour = new Class({
   options : {
     destroyElementsOnCleanup : false,
     selector : '[data-role]',
+    scrollSelector : '[data-scroll]',
     cleanupSelector : '[data-role-cleanup]',
     roleAttribute : 'data-role',
+    scrollAttribute : 'data-scroll',
     cleanupAttribute : 'data-role-cleanup',
     unLoadSelector : '[data-role-unload]',
     unLoadAttribute : 'data-role-unload',
@@ -18,8 +20,12 @@ Scour = new Class({
     definedKey : 'Scour:defined',
     eventsKey : 'Scour:events',
     apiKey : 'Scour:API',
+    scrollKey : 'Scour:scroll',
+    scrollEnterKey : 'Scour:scroll:enter',
+    scrollLeaveKey : 'Scour:scroll:leave',
     useBeforeUnloadEvent : true,
-    mergeGlobalRoles : true
+    mergeGlobalRoles : true,
+    doc : document
   }, 
 
   initialize : function(options) {
@@ -91,6 +97,86 @@ Scour = new Class({
 
   elementHasRole : function(elm,role) {
     return element.get(this.options.roleAttribute).contains(role);
+  },
+
+  setupScrollEvents : function() {
+    if(!this.scrollEvents) {
+      this.options.doc.addEvent('scroll',this.onScroll.bind(this));
+      this.scrollEvents = true;
+    }
+  },
+
+  onScroll : function(event) {
+    var y0 = window.getScroll().y;
+    var y1 = y0 + window.getSize().y;
+    this.getScrollElements().each(function(element) {
+      var key = this.options.scrollKey;
+      var pos = element.retrieve(key);
+      if(!pos) {
+        var a = element.getPosition().y;
+        var b = element.getSize().y + a;
+        pos = {
+          y0 : a,
+          y1 : b
+        };
+        element.store(key,pos);
+      }
+      if(pos.y0 <= y1 && y0 <= pos.y1) {
+        this.onScrollEnter(element);
+      }
+      else {
+        this.onScrollLeave(element);
+      }
+    },this);
+  },
+
+  getElementScrollRoles : function(element) {
+    var roles = element.get(this.options.scrollAttribute);
+    if(roles.length > 0) {
+      return roles.split(' ');
+    }
+    return [];
+  },
+
+  onScrollEnter : function(element) {
+    var key = this.options.scrollEnterKey;
+    var bool = element.retrieve(key,false);
+    if(!bool) {
+      element.store(key,true);
+      this.getElementScrollRoles(element).each(function(role) {
+        var key = this.createStorageKey(this.options.eventsKey,role);
+        var events = element.retrieve(key,{});
+        var fn = events.onEnter;
+        if(fn) {
+          this.fireRoleEvent(element,role,fn);
+        }
+      },this);
+    }
+  },
+
+  onScrollLeave : function(element) {
+    var key = this.options.scrollEnterKey;
+    var bool = element.retrieve(key,false);
+    if(bool) {
+      element.store(key,false);
+      this.getElementScrollRoles(element).each(function(role) {
+        var key = this.createStorageKey(this.options.eventsKey,role);
+        var events = element.retrieve(key,{});
+        var fn = events.onLeave;
+        if(fn) {
+          this.fireRoleEvent(element,role,fn);
+        }
+      },this);
+    }
+  },
+
+  getScrollElements : function() {
+    if(!this.scrollElements) {
+      this.scrollElements = this.findElements(this.getContainer(),this.options.scrollSelector,this.options.scrollAttribute).map(function(result) {
+        return result[0];
+      });
+    }
+    return this.scrollElements;
   },
 
   createStorageKey : function(key,role) {
@@ -201,9 +287,15 @@ Scour = new Class({
     if(events.onLoad) {
       this.fireRoleEvent(element,role,events.onLoad,events);
     }
+    if(events.onEnter || events.onLeave) {
+      var key = this.options.scrollAttribute;
+      var value = element.getAttribute(key) || '';
+      value += role + ' ';
+      element.setAttribute(key,value);
+      this.setupScrollEvents();
+    }
 
-    var filterMethods = ['onLoad','onIterate'];
-    var methods = {};
+    var filterMethods = ['onLoad','onIterate','onEnter','onLeave'];
     for(var i in events) {
       if(filterMethods.indexOf(i) == -1) {
         var fn = events[i];
