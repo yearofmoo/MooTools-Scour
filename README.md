@@ -136,7 +136,6 @@ Scour.Global.defineRole('Animate',{
 Scour also pays attention to scrolling behaviours in definition objects:
 
 ```javascripts
-
 Scour.Global.defineRole('SomeRole',{
 
    onLoad : function() {
