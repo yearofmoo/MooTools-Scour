@@ -131,6 +131,28 @@ Scour.Global.defineRole('Animate',{
 
 ```
 
+### Scrolling Events
+
+Scour also pays attention to scrolling behaviours in definition objects:
+
+```javascripts
+
+Scour.Global.defineRole('SomeRole',{
+
+   onLoad : function() {
+     //same as usual
+   },
+
+   onEnter : function() {
+     //this will get fired once the element is visible within the browser window
+   },
+
+   onLeave : function() {
+     //this will get fired once the element is visible within the browser window
+   }
+
+});
+
 ## More Info...
 
 * Please visit http://www.yearofmoo.com/Scour for a full documentation and a demo of the Scour plugin.
