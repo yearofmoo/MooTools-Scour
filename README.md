@@ -131,7 +131,7 @@ Scour.Global.defineRole('Animate',{
 
 ```
 
-### Scrolling Events
+## Scrolling Events
 
 Scour also pays attention to scrolling behaviours in definition objects:
 
