@@ -62,7 +62,7 @@ Scour = new Class({
   },
 
   setContainer : function(element) {
-    this.options.container = $(element);
+    this.options.container = document.id(element);
   },
 
   getContainer : function() {
@@ -205,34 +205,36 @@ Scour = new Class({
   },
 
   findElements : function(element,selector,roleAttribute) {
-    element = $(element || this.getContainer());
     var elements = [];
-    var results = element.getElements(selector);
-    if(element.get(roleAttribute)) {
-      results.push(element);
-    }
-    results.each(function(elm) {
-      var roles = elm.retrieve(this.options.rolesKey);
-      if(!roles) {
-        roles = (elm.get(roleAttribute) || "").trim().split(' ');
-        elm.store(this.options.rolesKey,roles);
+    element = document.id(element || this.getContainer());
+    if(element) {
+      var results = element.getElements(selector);
+      if(element.get(roleAttribute)) {
+        results.push(element);
       }
-      roles.each(function(role) {
-        if(role.length > 0 && this.isRoleDefined(role)) {
-          var key = this.createStorageKey(this.options.eventsKey,role);
-          var events = elm.retrieve(key);
-          if(!events) {
-            events = Object.clone(this.getRole(role));
-            elm.store(key,events);
-          }
-
-          var pass = !events.applyIf || (typeOf(events.applyIf) == 'function' && events.applyIf(elm) == true);
-          if(pass) {
-            elements.push([elm,role,events]);
-          }
+      results.each(function(elm) {
+        var roles = elm.retrieve(this.options.rolesKey);
+        if(!roles) {
+          roles = (elm.get(roleAttribute) || "").trim().split(' ');
+          elm.store(this.options.rolesKey,roles);
         }
+        roles.each(function(role) {
+          if(role.length > 0 && this.isRoleDefined(role)) {
+            var key = this.createStorageKey(this.options.eventsKey,role);
+            var events = elm.retrieve(key);
+            if(!events) {
+              events = Object.clone(this.getRole(role));
+              elm.store(key,events);
+            }
+
+            var pass = !events.applyIf || (typeOf(events.applyIf) == 'function' && events.applyIf(elm) == true);
+            if(pass) {
+              elements.push([elm,role,events]);
+            }
+          }
+        },this);
       },this);
-    },this);
+    }
     return elements;
   },
 
@@ -255,7 +257,7 @@ Scour = new Class({
     var elements, role;
     if(typeOf(container) == 'string') {
       role = container;
-      container = $(document.body);
+      container = document.id(document.body);
     }
     elements = this.findElements(container,this.options.selector,this.options.roleAttribute);
     if(role) {
