@@ -155,4 +155,4 @@ Scour.Global.defineRole('SomeRole',{
 
 ## More Info...
 
-* Please visit http://www.yearofmoo.com/code/Scour.html for a full documentation and a demo of the Scour plugin.
+* Please visit http://www.yearofmoo.com/code/Scour.html for full documentation and a demo of the Scour plugin.
